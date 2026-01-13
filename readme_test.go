@@ -190,3 +190,75 @@ func TestStrlenFunction(test *testing.T) {
 		test.Fail()
 	}
 }
+
+func TestBatchEvaluationReadme(test *testing.T) {
+	expression, err := NewEvaluableExpression("(requests_made * requests_succeeded / 100) >= 90")
+	if err != nil {
+		test.Log(err)
+		test.Fail()
+	}
+
+	// Create multiple parameter sets
+	parameterSets := []map[string]interface{}{
+		{"requests_made": 100, "requests_succeeded": 95},
+		{"requests_made": 100, "requests_succeeded": 85},
+		{"requests_made": 100, "requests_succeeded": 92},
+	}
+
+	// Evaluate sequentially
+	results := expression.EvaluateBatch(parameterSets)
+
+	expectedResults := []bool{true, false, true}
+
+	if len(results) != len(expectedResults) {
+		test.Logf("Expected %d results, got %d\n", len(expectedResults), len(results))
+		test.Fail()
+		return
+	}
+
+	for i, result := range results {
+		if result.Error != nil {
+			test.Logf("Error evaluating set %d: %v\n", i, result.Error)
+			test.Fail()
+		} else if result.Result != expectedResults[i] {
+			test.Logf("Result %d: Expected %v, got %v\n", i, expectedResults[i], result.Result)
+			test.Fail()
+		}
+	}
+}
+
+func TestBatchEvaluationParallelReadme(test *testing.T) {
+	expression, err := NewEvaluableExpression("(requests_made * requests_succeeded / 100) >= 90")
+	if err != nil {
+		test.Log(err)
+		test.Fail()
+	}
+
+	// Create multiple parameter sets
+	parameterSets := []map[string]interface{}{
+		{"requests_made": 100, "requests_succeeded": 95},
+		{"requests_made": 100, "requests_succeeded": 85},
+		{"requests_made": 100, "requests_succeeded": 92},
+	}
+
+	// Evaluate in parallel with 4 workers
+	results := expression.EvaluateBatchParallel(parameterSets, 4)
+
+	expectedResults := []bool{true, false, true}
+
+	if len(results) != len(expectedResults) {
+		test.Logf("Expected %d results, got %d\n", len(expectedResults), len(results))
+		test.Fail()
+		return
+	}
+
+	for i, result := range results {
+		if result.Error != nil {
+			test.Logf("Error evaluating set %d: %v\n", i, result.Error)
+			test.Fail()
+		} else if result.Result != expectedResults[i] {
+			test.Logf("Result %d: Expected %v, got %v\n", i, expectedResults[i], result.Result)
+			test.Fail()
+		}
+	}
+}

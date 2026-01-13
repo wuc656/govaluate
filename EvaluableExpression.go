@@ -338,6 +338,7 @@ If maxWorkers is <= 0, it defaults to the number of parameter sets (fully parall
 Returns a slice of EvaluationResult in the same order as the input parameterSets.
 
 Example:
+
 	expression, _ := govaluate.NewEvaluableExpression("foo > threshold")
 	paramSets := []map[string]interface{}{
 		{"foo": 10, "threshold": 5},
@@ -366,19 +367,19 @@ func (e EvaluableExpression) EvaluateBatchParallel(parameterSets []map[string]in
 	}
 
 	results := make([]EvaluationResult, numSets)
-	
+
 	// Create a work queue
 	type work struct {
 		index  int
 		params map[string]interface{}
 	}
-	
+
 	workChan := make(chan work, numSets)
-	
+
 	// Start workers
 	var wg sync.WaitGroup
 	wg.Add(workers)
-	
+
 	for w := 0; w < workers; w++ {
 		go func() {
 			defer wg.Done()
@@ -391,15 +392,15 @@ func (e EvaluableExpression) EvaluateBatchParallel(parameterSets []map[string]in
 			}
 		}()
 	}
-	
+
 	// Queue all work
 	for i, params := range parameterSets {
 		workChan <- work{index: i, params: params}
 	}
 	close(workChan)
-	
+
 	// Wait for all workers to complete
 	wg.Wait()
-	
+
 	return results
 }

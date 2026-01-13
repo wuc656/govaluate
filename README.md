@@ -97,6 +97,39 @@ Expressions are parsed once, and can be re-used multiple times. Parsing is the c
 	}
 ```
 
+Parallel Evaluation
+--
+
+EvaluableExpression is thread-safe and can be evaluated concurrently from multiple goroutines. For batch operations where you need to evaluate the same expression against many different parameter sets, you can use the batch evaluation methods:
+
+```go
+	expression, _ := govaluate.NewEvaluableExpression("(requests_made * requests_succeeded / 100) >= 90")
+	
+	// Create multiple parameter sets
+	parameterSets := []map[string]interface{}{
+		{"requests_made": 100, "requests_succeeded": 95},
+		{"requests_made": 100, "requests_succeeded": 85},
+		{"requests_made": 100, "requests_succeeded": 92},
+	}
+	
+	// Evaluate sequentially
+	results := expression.EvaluateBatch(parameterSets)
+	
+	// Or evaluate in parallel with 4 workers for better performance
+	results := expression.EvaluateBatchParallel(parameterSets, 4)
+	
+	// Check results
+	for i, result := range results {
+		if result.Error != nil {
+			fmt.Printf("Error evaluating set %d: %v\n", i, result.Error)
+		} else {
+			fmt.Printf("Result %d: %v\n", i, result.Result)
+		}
+	}
+```
+
+The `EvaluateBatchParallel` method is particularly useful when you need to evaluate hundreds or thousands of parameter sets, as it can provide significant performance improvements on multi-core systems. Pass `0` as the `maxWorkers` parameter for fully parallel execution, or specify a number to limit concurrency.
+
 The normal C-standard order of operators is respected. When writing an expression, be sure that you either order the operators correctly, or use parenthesis to clarify which portions of an expression should be run first.
 
 Escaping characters

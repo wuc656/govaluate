@@ -250,7 +250,7 @@ Benchmarks batch evaluation (sequential)
 func BenchmarkEvaluateBatchSequential(bench *testing.B) {
 	bench.ReportAllocs()
 	expression, _ := NewEvaluableExpression("(requests_made * requests_succeeded / 100) >= 90")
-	
+
 	// Create parameter sets
 	paramSets := make([]map[string]interface{}, 100)
 	for i := 0; i < 100; i++ {
@@ -272,7 +272,7 @@ Benchmarks batch evaluation (parallel with 4 workers)
 func BenchmarkEvaluateBatchParallel4Workers(bench *testing.B) {
 	bench.ReportAllocs()
 	expression, _ := NewEvaluableExpression("(requests_made * requests_succeeded / 100) >= 90")
-	
+
 	// Create parameter sets
 	paramSets := make([]map[string]interface{}, 100)
 	for i := 0; i < 100; i++ {
@@ -294,7 +294,7 @@ Benchmarks batch evaluation (parallel with 10 workers)
 func BenchmarkEvaluateBatchParallel10Workers(bench *testing.B) {
 	bench.ReportAllocs()
 	expression, _ := NewEvaluableExpression("(requests_made * requests_succeeded / 100) >= 90")
-	
+
 	// Create parameter sets
 	paramSets := make([]map[string]interface{}, 100)
 	for i := 0; i < 100; i++ {
@@ -316,7 +316,7 @@ Benchmarks batch evaluation (fully parallel)
 func BenchmarkEvaluateBatchParallelFull(bench *testing.B) {
 	bench.ReportAllocs()
 	expression, _ := NewEvaluableExpression("(requests_made * requests_succeeded / 100) >= 90")
-	
+
 	// Create parameter sets
 	paramSets := make([]map[string]interface{}, 100)
 	for i := 0; i < 100; i++ {
@@ -338,7 +338,7 @@ Benchmarks small batch evaluation (10 sets, sequential)
 func BenchmarkEvaluateSmallBatchSequential(bench *testing.B) {
 	bench.ReportAllocs()
 	expression, _ := NewEvaluableExpression("foo + bar * baz")
-	
+
 	paramSets := make([]map[string]interface{}, 10)
 	for i := 0; i < 10; i++ {
 		paramSets[i] = map[string]interface{}{
@@ -360,7 +360,7 @@ Benchmarks small batch evaluation (10 sets, parallel)
 func BenchmarkEvaluateSmallBatchParallel(bench *testing.B) {
 	bench.ReportAllocs()
 	expression, _ := NewEvaluableExpression("foo + bar * baz")
-	
+
 	paramSets := make([]map[string]interface{}, 10)
 	for i := 0; i < 10; i++ {
 		paramSets[i] = map[string]interface{}{
