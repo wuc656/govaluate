@@ -243,3 +243,135 @@ func BenchmarkNestedAccessors(bench *testing.B) {
 		_, _ = expression.Evaluate(fooFailureParameters)
 	}
 }
+
+/*
+Benchmarks batch evaluation (sequential)
+*/
+func BenchmarkEvaluateBatchSequential(bench *testing.B) {
+	bench.ReportAllocs()
+	expression, _ := NewEvaluableExpression("(requests_made * requests_succeeded / 100) >= 90")
+	
+	// Create parameter sets
+	paramSets := make([]map[string]interface{}, 100)
+	for i := 0; i < 100; i++ {
+		paramSets[i] = map[string]interface{}{
+			"requests_made":      100.0,
+			"requests_succeeded": float64(80 + i%20),
+		}
+	}
+
+	bench.ResetTimer()
+	for i := 0; i < bench.N; i++ {
+		_ = expression.EvaluateBatch(paramSets)
+	}
+}
+
+/*
+Benchmarks batch evaluation (parallel with 4 workers)
+*/
+func BenchmarkEvaluateBatchParallel4Workers(bench *testing.B) {
+	bench.ReportAllocs()
+	expression, _ := NewEvaluableExpression("(requests_made * requests_succeeded / 100) >= 90")
+	
+	// Create parameter sets
+	paramSets := make([]map[string]interface{}, 100)
+	for i := 0; i < 100; i++ {
+		paramSets[i] = map[string]interface{}{
+			"requests_made":      100.0,
+			"requests_succeeded": float64(80 + i%20),
+		}
+	}
+
+	bench.ResetTimer()
+	for i := 0; i < bench.N; i++ {
+		_ = expression.EvaluateBatchParallel(paramSets, 4)
+	}
+}
+
+/*
+Benchmarks batch evaluation (parallel with 10 workers)
+*/
+func BenchmarkEvaluateBatchParallel10Workers(bench *testing.B) {
+	bench.ReportAllocs()
+	expression, _ := NewEvaluableExpression("(requests_made * requests_succeeded / 100) >= 90")
+	
+	// Create parameter sets
+	paramSets := make([]map[string]interface{}, 100)
+	for i := 0; i < 100; i++ {
+		paramSets[i] = map[string]interface{}{
+			"requests_made":      100.0,
+			"requests_succeeded": float64(80 + i%20),
+		}
+	}
+
+	bench.ResetTimer()
+	for i := 0; i < bench.N; i++ {
+		_ = expression.EvaluateBatchParallel(paramSets, 10)
+	}
+}
+
+/*
+Benchmarks batch evaluation (fully parallel)
+*/
+func BenchmarkEvaluateBatchParallelFull(bench *testing.B) {
+	bench.ReportAllocs()
+	expression, _ := NewEvaluableExpression("(requests_made * requests_succeeded / 100) >= 90")
+	
+	// Create parameter sets
+	paramSets := make([]map[string]interface{}, 100)
+	for i := 0; i < 100; i++ {
+		paramSets[i] = map[string]interface{}{
+			"requests_made":      100.0,
+			"requests_succeeded": float64(80 + i%20),
+		}
+	}
+
+	bench.ResetTimer()
+	for i := 0; i < bench.N; i++ {
+		_ = expression.EvaluateBatchParallel(paramSets, 0)
+	}
+}
+
+/*
+Benchmarks small batch evaluation (10 sets, sequential)
+*/
+func BenchmarkEvaluateSmallBatchSequential(bench *testing.B) {
+	bench.ReportAllocs()
+	expression, _ := NewEvaluableExpression("foo + bar * baz")
+	
+	paramSets := make([]map[string]interface{}, 10)
+	for i := 0; i < 10; i++ {
+		paramSets[i] = map[string]interface{}{
+			"foo": float64(i),
+			"bar": float64(i * 2),
+			"baz": float64(i * 3),
+		}
+	}
+
+	bench.ResetTimer()
+	for i := 0; i < bench.N; i++ {
+		_ = expression.EvaluateBatch(paramSets)
+	}
+}
+
+/*
+Benchmarks small batch evaluation (10 sets, parallel)
+*/
+func BenchmarkEvaluateSmallBatchParallel(bench *testing.B) {
+	bench.ReportAllocs()
+	expression, _ := NewEvaluableExpression("foo + bar * baz")
+	
+	paramSets := make([]map[string]interface{}, 10)
+	for i := 0; i < 10; i++ {
+		paramSets[i] = map[string]interface{}{
+			"foo": float64(i),
+			"bar": float64(i * 2),
+			"baz": float64(i * 3),
+		}
+	}
+
+	bench.ResetTimer()
+	for i := 0; i < bench.N; i++ {
+		_ = expression.EvaluateBatchParallel(paramSets, 4)
+	}
+}

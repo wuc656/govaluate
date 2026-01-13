@@ -296,3 +296,110 @@ Removes the tokens from the EvaluableExpression. This will cause the Tokens() an
 func (e *EvaluableExpression) CleanupTokens() {
 	e.tokens = e.tokens[:0]
 }
+
+/*
+EvaluationResult represents the result of evaluating an expression with a set of parameters.
+*/
+type EvaluationResult struct {
+	// Result is the evaluation result, or nil if there was an error
+	Result interface{}
+	// Error is the error that occurred during evaluation, or nil if successful
+	Error error
+}
+
+/*
+EvaluateBatch evaluates the expression against multiple parameter sets sequentially.
+This is useful when you need to evaluate the same expression against many different parameter sets.
+
+Returns a slice of EvaluationResult in the same order as the input parameterSets.
+*/
+func (e EvaluableExpression) EvaluateBatch(parameterSets []map[string]interface{}) []EvaluationResult {
+	results := make([]EvaluationResult, len(parameterSets))
+
+	for i, params := range parameterSets {
+		result, err := e.Evaluate(params)
+		results[i] = EvaluationResult{
+			Result: result,
+			Error:  err,
+		}
+	}
+
+	return results
+}
+
+/*
+EvaluateBatchParallel evaluates the expression against multiple parameter sets in parallel.
+This method is thread-safe and can provide significant performance improvements when evaluating
+the same expression against many different parameter sets.
+
+The maxWorkers parameter controls the maximum number of concurrent goroutines used for evaluation.
+If maxWorkers is <= 0, it defaults to the number of parameter sets (fully parallel).
+
+Returns a slice of EvaluationResult in the same order as the input parameterSets.
+
+Example:
+	expression, _ := govaluate.NewEvaluableExpression("foo > threshold")
+	paramSets := []map[string]interface{}{
+		{"foo": 10, "threshold": 5},
+		{"foo": 3, "threshold": 5},
+		{"foo": 7, "threshold": 5},
+	}
+	results := expression.EvaluateBatchParallel(paramSets, 0)
+	for i, result := range results {
+		if result.Error != nil {
+			fmt.Printf("Error evaluating set %d: %v\n", i, result.Error)
+		} else {
+			fmt.Printf("Result %d: %v\n", i, result.Result)
+		}
+	}
+*/
+func (e EvaluableExpression) EvaluateBatchParallel(parameterSets []map[string]interface{}, maxWorkers int) []EvaluationResult {
+	numSets := len(parameterSets)
+	if numSets == 0 {
+		return []EvaluationResult{}
+	}
+
+	// Determine the number of workers
+	workers := maxWorkers
+	if workers <= 0 {
+		workers = numSets
+	}
+
+	results := make([]EvaluationResult, numSets)
+	
+	// Create a work queue
+	type work struct {
+		index  int
+		params map[string]interface{}
+	}
+	
+	workChan := make(chan work, numSets)
+	
+	// Start workers
+	var wg sync.WaitGroup
+	wg.Add(workers)
+	
+	for w := 0; w < workers; w++ {
+		go func() {
+			defer wg.Done()
+			for job := range workChan {
+				result, err := e.Evaluate(job.params)
+				results[job.index] = EvaluationResult{
+					Result: result,
+					Error:  err,
+				}
+			}
+		}()
+	}
+	
+	// Queue all work
+	for i, params := range parameterSets {
+		workChan <- work{index: i, params: params}
+	}
+	close(workChan)
+	
+	// Wait for all workers to complete
+	wg.Wait()
+	
+	return results
+}
