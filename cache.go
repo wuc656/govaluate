@@ -1,4 +1,4 @@
-//go:build go1.24 && cache
+/* //go:build go1.24 && cache */
 
 package govaluate
 
@@ -73,3 +73,23 @@ func getConstantFromMap(value any) (*evaluationStage, bool) {
 	}
 	return nil, false
 }
+
+//保留 noCache.go 程式碼
+/* //go:build !go1.24 || !cache
+
+package govaluate
+
+func getParameterStage(name string) (*evaluationStage, error) {
+	operator := makeParameterStage(name)
+	return &evaluationStage{
+		operator: operator,
+	}, nil
+}
+
+func getConstantStage(value any) (*evaluationStage, error) {
+	operator := makeLiteralStage(value)
+	return &evaluationStage{
+		symbol:   LITERAL,
+		operator: operator,
+	}, nil
+} */
