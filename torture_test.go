@@ -5,6 +5,7 @@ package govaluate
 	ref: https://gist.github.com/abrander/fa05ae9b181b48ffe7afb12c961b6e90
 */
 import (
+	"strings"
 	"fmt"
 	"math/rand"
 	"os"
@@ -125,16 +126,16 @@ func TestPanics(test *testing.T) {
 
 	fmt.Printf("Running %d torture test cases...\n", ITERATIONS)
 
-	for i := 0; i < ITERATIONS; i++ {
+	for range ITERATIONS {
 
 		num := localRand.Intn(3) + 2
-		expression := ""
+		var expression strings.Builder
 
 		for n := 0; n < num; n++ {
-			expression += fmt.Sprintf(" %s", getRandom(values))
+			fmt.Fprintf(&expression, " %s", getRandom(values))
 		}
 
-		checkPanic(expression, test)
+		checkPanic(expression.String(), test)
 	}
 
 	test.Logf("Done. %d/%d panics.\n", panics, ITERATIONS)
