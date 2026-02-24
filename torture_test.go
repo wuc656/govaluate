@@ -17,7 +17,7 @@ var (
 	empty  struct{}
 	empty2 *string
 
-	values = []interface{}{
+	values = []any{
 		-1,
 		0,
 		12,
@@ -145,7 +145,7 @@ func TestPanics(test *testing.T) {
 
 func checkPanic(expression string, test *testing.T) {
 
-	parameters := make(map[string]interface{})
+	parameters := make(map[string]any)
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -167,7 +167,7 @@ func checkPanic(expression string, test *testing.T) {
 	_, _ = eval.Evaluate(parameters)
 }
 
-func getRandom(haystack []interface{}) interface{} {
+func getRandom(haystack []any) any {
 
 	i := localRand.Intn(len(haystack))
 	return haystack[i]

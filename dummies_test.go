@@ -13,9 +13,9 @@ type dummyParameter struct {
 	String    string
 	Int       int
 	BoolFalse bool
-	Nil       interface{}
+	Nil       any
 	Nested    dummyNestedParameter
-	Map       map[string]interface{}
+	Map       map[string]any
 }
 
 func (dummyParameter) Func() string {
@@ -49,7 +49,7 @@ func (dummyParameter) TestArgs(str string, ui uint, ui8 uint8, ui16 uint16, ui32
 	return fmt.Sprintf("%v: %v", str, sum)
 }
 
-func (dummyParameter) AlwaysFail() (interface{}, error) {
+func (dummyParameter) AlwaysFail() (any, error) {
 	return nil, errors.New("function should always fail")
 }
 
@@ -69,12 +69,12 @@ var dummyParameterInstance = dummyParameter{
 	Nested: dummyNestedParameter{
 		Funk: "funkalicious",
 	},
-	Map: map[string]interface{}{
+	Map: map[string]any{
 		"String":        "string!",
 		"Int":           101,
 		"StringCompare": strings.Compare,
-		"IntArray":      []interface{}{1, 2, 3},
-		"StringArray":   []interface{}{"foo", "bar", "baz"},
+		"IntArray":      []any{1, 2, 3},
+		"StringArray":   []any{"foo", "bar", "baz"},
 	},
 }
 
@@ -88,7 +88,7 @@ var fooPtrParameter = EvaluationParameter{
 	Value: &dummyParameterInstance,
 }
 
-var fooFailureParameters = map[string]interface{}{
+var fooFailureParameters = map[string]any{
 	"foo":    fooParameter.Value,
 	"fooptr": &fooPtrParameter.Value,
 }

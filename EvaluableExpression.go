@@ -9,7 +9,7 @@ import (
 const isoDateFormat string = "2006-01-02T15:04:05.999999999Z0700"
 const shortCircuitHolder int = -1
 
-var DUMMY_PARAMETERS = MapParameters(map[string]interface{}{})
+var DUMMY_PARAMETERS = MapParameters(map[string]any{})
 
 /*
 EvaluableExpression represents a set of ExpressionTokens which, taken together,
@@ -129,7 +129,7 @@ func NewEvaluableExpressionWithFunctions(expression string, functions map[string
 /*
 Same as `Eval`, but automatically wraps a map of parameters into a `govalute.Parameters` structure.
 */
-func (e EvaluableExpression) Evaluate(parameters map[string]interface{}) (interface{}, error) {
+func (e EvaluableExpression) Evaluate(parameters map[string]any) (any, error) {
 
 	if parameters == nil {
 		return e.Eval(nil)
@@ -139,7 +139,7 @@ func (e EvaluableExpression) Evaluate(parameters map[string]interface{}) (interf
 }
 
 var sanitizedParamsPool = sync.Pool{
-	New: func() interface{} {
+	New: func() any {
 		return &sanitizedParameters{}
 	},
 }
@@ -155,7 +155,7 @@ In all non-error circumstances, this returns the single value result of the expr
 e.g., if the expression is "1 + 1", this will return 2.0.
 e.g., if the expression is "foo + 1" and parameters contains "foo" = 2, this will return 3.0
 */
-func (e EvaluableExpression) Eval(parameters Parameters) (interface{}, error) {
+func (e EvaluableExpression) Eval(parameters Parameters) (any, error) {
 
 	if e.evaluationStages == nil {
 		return nil, nil
@@ -178,9 +178,9 @@ func (e EvaluableExpression) Eval(parameters Parameters) (interface{}, error) {
 	return ret, err
 }
 
-func (e EvaluableExpression) evaluateStage(stage *evaluationStage, parameters Parameters) (interface{}, error) {
+func (e EvaluableExpression) evaluateStage(stage *evaluationStage, parameters Parameters) (any, error) {
 
-	var left, right interface{}
+	var left, right any
 	var err error
 
 	if stage.leftStage != nil {
@@ -247,7 +247,7 @@ func (e EvaluableExpression) evaluateStage(stage *evaluationStage, parameters Pa
 	return stage.operator(left, right, parameters)
 }
 
-func typeCheck(check stageTypeCheck, value interface{}, symbol OperatorSymbol, format string) error {
+func typeCheck(check stageTypeCheck, value any, symbol OperatorSymbol, format string) error {
 
 	if check == nil {
 		return nil

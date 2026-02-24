@@ -18,7 +18,7 @@ type EvaluationFailureTest struct {
 	Name       string
 	Input      string
 	Functions  map[string]ExpressionFunction
-	Parameters map[string]interface{}
+	Parameters map[string]any
 	Expected   string
 }
 
@@ -37,7 +37,7 @@ const (
 )
 
 // preset parameter map of types that can be used in an evaluation failure test to check typing.
-var EVALUATION_FAILURE_PARAMETERS = map[string]interface{}{
+var EVALUATION_FAILURE_PARAMETERS = map[string]any{
 	"number": 1,
 	"string": "foo",
 	"bool":   true,
@@ -47,9 +47,9 @@ func TestComplexParameter(test *testing.T) {
 
 	var expression *EvaluableExpression
 	var err error
-	var v interface{}
+	var v any
 
-	parameters := map[string]interface{}{
+	parameters := map[string]any{
 		"complex64":  complex64(0),
 		"complex128": complex128(0),
 	}
@@ -76,7 +76,7 @@ func TestComplexParameter(test *testing.T) {
 func TestStructParameter(t *testing.T) {
 	expected := DebugStruct{}
 	expression, _ := NewEvaluableExpression("foo")
-	parameters := map[string]interface{}{"foo": expected}
+	parameters := map[string]any{"foo": expected}
 	v, err := expression.Evaluate(parameters)
 	if err != nil {
 		t.Errorf("Expected no error, but have %s", err)
@@ -362,7 +362,7 @@ func TestRegexParameterCompilation(test *testing.T) {
 		{
 			Name:  "Regex equality runtime parsing",
 			Input: "'foo' =~ foo",
-			Parameters: map[string]interface{}{
+			Parameters: map[string]any{
 				"foo": "[foo",
 			},
 			Expected: INVALID_REGEX,
@@ -370,7 +370,7 @@ func TestRegexParameterCompilation(test *testing.T) {
 		{
 			Name:  "Regex inequality runtime parsing",
 			Input: "'foo' =~ foo",
-			Parameters: map[string]interface{}{
+			Parameters: map[string]any{
 				"foo": "[foo",
 			},
 			Expected: INVALID_REGEX,
@@ -387,7 +387,7 @@ func TestFunctionExecution(test *testing.T) {
 			Name:  "Function error bubbling",
 			Input: "error()",
 			Functions: map[string]ExpressionFunction{
-				"error": func(arguments ...interface{}) (interface{}, error) {
+				"error": func(arguments ...any) (any, error) {
 					return nil, errors.New("Huge problems")
 				},
 			},
@@ -446,7 +446,7 @@ func TestInvalidParameterCalls(test *testing.T) {
 		{
 			Name:  "Unexported parameter access",
 			Input: "foo.bar",
-			Parameters: map[string]interface{}{
+			Parameters: map[string]any{
 				"foo": struct {
 					bar string
 				}{

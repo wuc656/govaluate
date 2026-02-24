@@ -6,7 +6,7 @@ type sanitizedParameters struct {
 	orig Parameters
 }
 
-func (p sanitizedParameters) Get(key string) (interface{}, error) {
+func (p sanitizedParameters) Get(key string) (any, error) {
 	value, err := p.orig.Get(key)
 	if err != nil {
 		return nil, err
@@ -15,7 +15,7 @@ func (p sanitizedParameters) Get(key string) (interface{}, error) {
 	return castToFloat64(value), nil
 }
 
-func castToFloat64(value interface{}) interface{} {
+func castToFloat64(value any) any {
 	switch value := value.(type) {
 	case uint8:
 		return float64(value)

@@ -84,7 +84,7 @@ func BenchmarkEvaluationLiteralModifiers(bench *testing.B) {
 func BenchmarkEvaluationParameter(bench *testing.B) {
 	bench.ReportAllocs()
 	expression, _ := NewEvaluableExpression("requests_made")
-	parameters := map[string]interface{}{
+	parameters := map[string]any{
 		"requests_made": 99.0,
 	}
 
@@ -100,7 +100,7 @@ Benchmarks evaluation times of parameters
 func BenchmarkEvaluationParameters(bench *testing.B) {
 	bench.ReportAllocs()
 	expression, _ := NewEvaluableExpression("requests_made > requests_succeeded")
-	parameters := map[string]interface{}{
+	parameters := map[string]any{
 		"requests_made":      99.0,
 		"requests_succeeded": 90.0,
 	}
@@ -117,7 +117,7 @@ Benchmarks evaluation times of parameters + literals with modifiers
 func BenchmarkEvaluationParametersModifiers(bench *testing.B) {
 	bench.ReportAllocs()
 	expression, _ := NewEvaluableExpression("(requests_made * requests_succeeded / 100) >= 90")
-	parameters := map[string]interface{}{
+	parameters := map[string]any{
 		"requests_made":      99.0,
 		"requests_succeeded": 90.0,
 	}
@@ -143,7 +143,7 @@ func BenchmarkComplexExpression(bench *testing.B) {
 		"modifierTest + 1000 / 2 > (80 * 100 % 2)"
 
 	expression, _ := NewEvaluableExpression(expressionString)
-	parameters := map[string]interface{}{
+	parameters := map[string]any{
 		"escapedVariable name with spaces": 99.0,
 		"unescaped\\-variableName":         90.0,
 		"modifierTest":                     5.0,
@@ -166,7 +166,7 @@ func BenchmarkRegexExpression(bench *testing.B) {
 	expressionString := "(foo !~ bar) && (foobar =~ oba)"
 
 	expression, _ := NewEvaluableExpression(expressionString)
-	parameters := map[string]interface{}{
+	parameters := map[string]any{
 		"foo": "foo",
 		"bar": "bar",
 		"baz": "baz",
@@ -189,7 +189,7 @@ func BenchmarkConstantRegexExpression(bench *testing.B) {
 	expressionString := "(foo !~ '[bB]az') && (bar =~ '[bB]ar')"
 	expression, _ := NewEvaluableExpression(expressionString)
 
-	parameters := map[string]interface{}{
+	parameters := map[string]any{
 		"foo": "foo",
 		"bar": "bar",
 	}

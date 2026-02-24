@@ -14,7 +14,7 @@ type lexerStream struct {
 }
 
 var lexerStreamPool = sync.Pool{
-	New: func() interface{} {
+	New: func() any {
 		return new(lexerStream)
 	},
 }

@@ -1706,7 +1706,7 @@ func runTokenParsingTest(tokenParsingTests []TokenParsingTest, test *testing.T) 
 	}
 }
 
-func noop(arguments ...interface{}) (interface{}, error) {
+func noop(arguments ...any) (any, error) {
 	return nil, nil
 }
 

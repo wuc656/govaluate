@@ -9,7 +9,7 @@ type tokenStream struct {
 }
 
 var tokenStreamPool = sync.Pool{
-	New: func() interface{} {
+	New: func() any {
 		return new(tokenStream)
 	},
 }

@@ -9,7 +9,7 @@ func getParameterStage(name string) (*evaluationStage, error) {
 	}, nil
 }
 
-func getConstantStage(value interface{}) (*evaluationStage, error) {
+func getConstantStage(value any) (*evaluationStage, error) {
 	operator := makeLiteralStage(value)
 	return &evaluationStage{
 		symbol:   LITERAL,

@@ -681,7 +681,7 @@ Otherwise, returns a new stage representing the condensed value from the elided 
 */
 func elideStage(root *evaluationStage) *evaluationStage {
 
-	var leftValue, rightValue, result interface{}
+	var leftValue, rightValue, result any
 	var err error
 
 	// right side must be a non-nil value. Left side must be nil or a value.

@@ -37,7 +37,7 @@ func TestParameterEvaluation(test *testing.T) {
 		test.Fail()
 	}
 
-	parameters := make(map[string]interface{}, 8)
+	parameters := make(map[string]any, 8)
 	parameters["foo"] = -1
 
 	result, err := expression.Evaluate(parameters)
@@ -60,7 +60,7 @@ func TestModifierEvaluation(test *testing.T) {
 		test.Fail()
 	}
 
-	parameters := make(map[string]interface{}, 8)
+	parameters := make(map[string]any, 8)
 	parameters["requests_made"] = 100
 	parameters["requests_succeeded"] = 80
 
@@ -84,7 +84,7 @@ func TestStringEvaluation(test *testing.T) {
 		test.Fail()
 	}
 
-	parameters := make(map[string]interface{}, 8)
+	parameters := make(map[string]any, 8)
 	parameters["http_response_body"] = "service is ok"
 
 	result, err := expression.Evaluate(parameters)
@@ -107,7 +107,7 @@ func TestFloatEvaluation(test *testing.T) {
 		test.Fail()
 	}
 
-	parameters := make(map[string]interface{}, 8)
+	parameters := make(map[string]any, 8)
 	parameters["total_mem"] = 1024
 	parameters["mem_used"] = 512
 
@@ -145,7 +145,7 @@ func TestDateComparison(test *testing.T) {
 
 func TestMultipleEvaluation(test *testing.T) {
 	expression, _ := NewEvaluableExpression("response_time <= 100")
-	parameters := make(map[string]interface{}, 8)
+	parameters := make(map[string]any, 8)
 
 	for i := 0; i < 64; i++ {
 		parameters["response_time"] = i
@@ -166,7 +166,7 @@ func TestMultipleEvaluation(test *testing.T) {
 func TestStrlenFunction(test *testing.T) {
 
 	functions := map[string]ExpressionFunction{
-		"strlen": func(args ...interface{}) (interface{}, error) {
+		"strlen": func(args ...any) (any, error) {
 			length := len(args[0].(string))
 			return (float64)(length), nil
 		},

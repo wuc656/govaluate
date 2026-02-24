@@ -79,7 +79,7 @@ func readToken(stream *lexerStream, state lexerState, functions map[string]Expre
 
 	var function ExpressionFunction
 	var ret ExpressionToken
-	var tokenValue interface{}
+	var tokenValue any
 	var tokenTime time.Time
 	var tokenString string
 	var kind TokenKind
@@ -301,7 +301,7 @@ func readTokenUntilFalse(stream *lexerStream, condition func(rune) bool) string 
 }
 
 var tokenBufferPool = sync.Pool{
-	New: func() interface{} {
+	New: func() any {
 		return &bytes.Buffer{}
 	},
 }
