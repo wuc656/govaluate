@@ -33,7 +33,7 @@ func (e *expressionOutputStream) createString(delimiter string) string {
 
 	penultimate := len(e.transactions) - 1
 
-	for i := 0; i < penultimate; i++ {
+	for i := range penultimate {
 
 		transaction = e.transactions[i]
 

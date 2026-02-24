@@ -1,6 +1,7 @@
 package govaluate
 
 import (
+	"slices"
 	"testing"
 )
 
@@ -34,13 +35,11 @@ func TestTokenKindStrings(test *testing.T) {
 
 		kindString = kind.String()
 
-		for _, extantKind := range kindStrings {
-			if extantKind == kindString {
+		if slices.Contains(kindStrings, kindString) {
 				test.Logf("Token kind test found duplicate string for token kind %v ('%v')\n", kind, kindString)
 				test.Fail()
 				return
 			}
-		}
 
 		kindStrings = append(kindStrings, kindString)
 	}

@@ -9,7 +9,7 @@ Serves as a "water test" to give an idea of the general overhead of parsing
 */
 func BenchmarkSingleParse(bench *testing.B) {
 	bench.ReportAllocs()
-	for i := 0; i < bench.N; i++ {
+	for bench.Loop() {
 		_, _ = NewEvaluableExpression("1")
 	}
 }
@@ -20,7 +20,7 @@ This is the "expected" use case of govaluate.
 */
 func BenchmarkSimpleParse(bench *testing.B) {
 	bench.ReportAllocs()
-	for i := 0; i < bench.N; i++ {
+	for bench.Loop() {
 		_, _ = NewEvaluableExpression("(requests_made * requests_succeeded / 100) >= 90")
 	}
 }
@@ -37,7 +37,7 @@ func BenchmarkFullParse(bench *testing.B) {
 		"[escapedVariable name with spaces] <= unescaped\\-variableName &&" +
 		"modifierTest + 1000 / 2 > (80 * 100 % 2)"
 
-	for i := 0; i < bench.N; i++ {
+	for bench.Loop() {
 		_, _ = NewEvaluableExpression(expression)
 	}
 }
@@ -50,7 +50,7 @@ func BenchmarkEvaluationSingle(bench *testing.B) {
 	expression, _ := NewEvaluableExpression("1")
 
 	bench.ResetTimer()
-	for i := 0; i < bench.N; i++ {
+	for bench.Loop() {
 		_, _ = expression.Evaluate(nil)
 	}
 }
@@ -63,7 +63,7 @@ func BenchmarkEvaluationNumericLiteral(bench *testing.B) {
 	expression, _ := NewEvaluableExpression("(2) > (1)")
 
 	bench.ResetTimer()
-	for i := 0; i < bench.N; i++ {
+	for bench.Loop() {
 		_, _ = expression.Evaluate(nil)
 	}
 }
@@ -76,7 +76,7 @@ func BenchmarkEvaluationLiteralModifiers(bench *testing.B) {
 	expression, _ := NewEvaluableExpression("(2) + (2) == (4)")
 
 	bench.ResetTimer()
-	for i := 0; i < bench.N; i++ {
+	for bench.Loop() {
 		_, _ = expression.Evaluate(nil)
 	}
 }
@@ -89,7 +89,7 @@ func BenchmarkEvaluationParameter(bench *testing.B) {
 	}
 
 	bench.ResetTimer()
-	for i := 0; i < bench.N; i++ {
+	for bench.Loop() {
 		_, _ = expression.Evaluate(parameters)
 	}
 }
@@ -106,7 +106,7 @@ func BenchmarkEvaluationParameters(bench *testing.B) {
 	}
 
 	bench.ResetTimer()
-	for i := 0; i < bench.N; i++ {
+	for bench.Loop() {
 		_, _ = expression.Evaluate(parameters)
 	}
 }
@@ -123,7 +123,7 @@ func BenchmarkEvaluationParametersModifiers(bench *testing.B) {
 	}
 
 	bench.ResetTimer()
-	for i := 0; i < bench.N; i++ {
+	for bench.Loop() {
 		_, _ = expression.Evaluate(parameters)
 	}
 }
@@ -150,7 +150,7 @@ func BenchmarkComplexExpression(bench *testing.B) {
 	}
 
 	bench.ResetTimer()
-	for i := 0; i < bench.N; i++ {
+	for bench.Loop() {
 		_, _ = expression.Evaluate(parameters)
 	}
 }
@@ -174,7 +174,7 @@ func BenchmarkRegexExpression(bench *testing.B) {
 	}
 
 	bench.ResetTimer()
-	for i := 0; i < bench.N; i++ {
+	for bench.Loop() {
 		_, _ = expression.Evaluate(parameters)
 	}
 }
@@ -195,7 +195,7 @@ func BenchmarkConstantRegexExpression(bench *testing.B) {
 	}
 
 	bench.ResetTimer()
-	for i := 0; i < bench.N; i++ {
+	for bench.Loop() {
 		_, _ = expression.Evaluate(parameters)
 	}
 }
@@ -206,7 +206,7 @@ func BenchmarkAccessors(bench *testing.B) {
 	expression, _ := NewEvaluableExpression(expressionString)
 
 	bench.ResetTimer()
-	for i := 0; i < bench.N; i++ {
+	for bench.Loop() {
 		_, _ = expression.Evaluate(fooFailureParameters)
 	}
 }
@@ -217,7 +217,7 @@ func BenchmarkAccessorMethod(bench *testing.B) {
 	expression, _ := NewEvaluableExpression(expressionString)
 
 	bench.ResetTimer()
-	for i := 0; i < bench.N; i++ {
+	for bench.Loop() {
 		_, _ = expression.Evaluate(fooFailureParameters)
 	}
 }
@@ -228,7 +228,7 @@ func BenchmarkAccessorMethodParams(bench *testing.B) {
 	expression, _ := NewEvaluableExpression(expressionString)
 
 	bench.ResetTimer()
-	for i := 0; i < bench.N; i++ {
+	for bench.Loop() {
 		_, _ = expression.Evaluate(fooFailureParameters)
 	}
 }
@@ -239,7 +239,7 @@ func BenchmarkNestedAccessors(bench *testing.B) {
 	expression, _ := NewEvaluableExpression(expressionString)
 
 	bench.ResetTimer()
-	for i := 0; i < bench.N; i++ {
+	for bench.Loop() {
 		_, _ = expression.Evaluate(fooFailureParameters)
 	}
 }

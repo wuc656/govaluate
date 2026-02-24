@@ -1,6 +1,7 @@
 package govaluate
 
 import (
+	"slices"
 	"errors"
 	"fmt"
 	"time"
@@ -243,13 +244,7 @@ func planPrecedenceLevel(
 
 		if len(validKinds) > 0 {
 
-			keyFound = false
-			for _, kind := range validKinds {
-				if kind == token.Kind {
-					keyFound = true
-					break
-				}
-			}
+			keyFound = slices.Contains(validKinds, token.Kind)
 
 			if !keyFound {
 				return rewind()

@@ -273,7 +273,7 @@ func typeConvertParams(method reflect.Value, params []reflect.Value) ([]reflect.
 		return nil, fmt.Errorf("too many arguments to parameter call: got %d arguments, expected %d", len(params), numIn)
 	}
 
-	for i := 0; i < numIn; i++ {
+	for i := range numIn {
 		t := methodType.In(i)
 		p := params[i]
 		pt := p.Type()

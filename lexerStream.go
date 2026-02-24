@@ -47,7 +47,7 @@ func (stream *lexerStream) rewind(amount int) {
 		stream.strPosition -= amount
 	}
 	strAmount := 0
-	for i := 0; i < amount; i++ {
+	for range amount {
 		if stream.position >= stream.length {
 			strAmount += 1
 			stream.position -= 1

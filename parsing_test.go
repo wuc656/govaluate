@@ -1564,7 +1564,7 @@ func combineWhitespaceExpressions(testCases []TokenParsingTest) []TokenParsingTe
 	var currentCase, strippedCase TokenParsingTest
 	caseLength := len(testCases)
 
-	for i := 0; i < caseLength; i++ {
+	for i := range caseLength {
 
 		currentCase = testCases[i]
 
@@ -1737,11 +1737,11 @@ func TestParallelParsing(t *testing.T) {
 		},
 	}
 
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			for i := 0; i < 100; i++ {
+			for range 100 {
 				runTokenParsingTest(tokenParsingTests, t)
 			}
 		}()

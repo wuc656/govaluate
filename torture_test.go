@@ -131,7 +131,7 @@ func TestPanics(test *testing.T) {
 		num := localRand.Intn(3) + 2
 		var expression strings.Builder
 
-		for n := 0; n < num; n++ {
+		for range num {
 			fmt.Fprintf(&expression, " %s", getRandom(values))
 		}
 
