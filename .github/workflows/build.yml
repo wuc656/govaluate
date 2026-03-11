@@ -1,5 +1,4 @@
 name: Build
-
 on: [push, pull_request]
 
 jobs:
@@ -8,18 +7,17 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go: ['1.18', '1.19', '1.20', '1.21']
+        go: ['1.22', '1.23', '1.24']
     steps:
       - uses: actions/checkout@v4
-      
-      - uses: actions/setup-go@v4
+
+      - uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go }}
           cache-dependency-path: ./go.mod
 
       - name: Tests
-        run: |
-          go test -v -race -bench=. $(go list ./...)
+        run: go test -v -race -bench=. $(go list ./...)
 
   lint:
     name: Go-Linter
@@ -27,16 +25,16 @@ jobs:
     needs: [test]
     steps:
       - uses: actions/checkout@v4
-      
-      - uses: actions/setup-go@v4
+
+      - uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
+          go-version-file: go.mod
           cache: false
 
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v4
+        uses: golangci/golangci-lint-action@v6
         with:
-          version: v1.55.2
+          version: v1.64.0
           args: --timeout=10m
 
   format:
@@ -45,16 +43,16 @@ jobs:
     needs: [test]
     steps:
       - uses: actions/checkout@v4
-      
-      - uses: actions/setup-go@v4
+
+      - uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
+          go-version-file: go.mod
           cache-dependency-path: ./go.mod
 
       - name: Check go fmt
         run: |
           if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then
-            echo "Code is not formatted. Please run 'go fmt -s ./...'"
+            echo "Code is not formatted. Please run 'gofmt -s -w .'"
             gofmt -s -d .
             exit 1
           fi
@@ -76,7 +74,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: -1
+          fetch-depth: 0        # 修正：0 = 完整 history
 
       - name: Run semantic-release
         env:
