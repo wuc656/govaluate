@@ -1,4 +1,6 @@
 name: Build
+permissions:
+  contents: read
 on: [push, pull_request]
 
 jobs:
@@ -71,6 +73,10 @@ jobs:
     needs: [test, lint, format]
     runs-on: ubuntu-latest
     if: github.repository == 'wuc656/govaluate' && github.event_name == 'push'
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
         with:
