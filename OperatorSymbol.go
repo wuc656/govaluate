@@ -1,5 +1,7 @@
 package govaluate
 
+import "slices"
+
 /*
 Represents the valid symbols for operators.
 */
@@ -225,13 +227,7 @@ False otherwise.
 */
 func (o OperatorSymbol) IsModifierType(candidate []OperatorSymbol) bool {
 
-	for _, symbolType := range candidate {
-		if o == symbolType {
-			return true
-		}
-	}
-
-	return false
+	return slices.Contains(candidate, o)
 }
 
 /*

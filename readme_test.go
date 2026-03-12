@@ -147,7 +147,7 @@ func TestMultipleEvaluation(test *testing.T) {
 	expression, _ := NewEvaluableExpression("response_time <= 100")
 	parameters := make(map[string]any, 8)
 
-	for i := 0; i < 64; i++ {
+	for i := range 64 {
 		parameters["response_time"] = i
 		result, err := expression.Evaluate(parameters)
 		if err != nil {

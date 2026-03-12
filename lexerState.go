@@ -3,6 +3,7 @@ package govaluate
 import (
 	"errors"
 	"fmt"
+	"slices"
 )
 
 type lexerState struct {
@@ -306,14 +307,7 @@ var validLexerStates = []lexerState{
 
 func (l lexerState) canTransitionTo(kind TokenKind) bool {
 
-	for _, validKind := range l.validNextKinds {
-
-		if validKind == kind {
-			return true
-		}
-	}
-
-	return false
+	return slices.Contains(l.validNextKinds, kind)
 }
 
 func checkExpressionSyntax(tokens []ExpressionToken) error {

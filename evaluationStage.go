@@ -322,7 +322,7 @@ func makeAccessorStage(pair []string) evaluationOperator {
 			var corePtrVal reflect.Value
 
 			// if this is a pointer, resolve it.
-			if coreValue.Kind() == reflect.Ptr {
+			if coreValue.Kind() == reflect.Pointer {
 				corePtrVal = coreValue
 				coreValue = coreValue.Elem()
 			}

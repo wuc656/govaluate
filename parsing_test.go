@@ -1738,13 +1738,11 @@ func TestParallelParsing(t *testing.T) {
 	}
 
 	for range 100 {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
+		wg.Go(func() {
 			for range 100 {
 				runTokenParsingTest(tokenParsingTests, t)
 			}
-		}()
+		})
 	}
 
 	wg.Wait()
