@@ -5,10 +5,10 @@ package govaluate
 	ref: https://gist.github.com/abrander/fa05ae9b181b48ffe7afb12c961b6e90
 */
 import (
-	"strings"
 	"fmt"
 	"math/rand"
 	"os"
+	"strings"
 	"testing"
 	"time"
 )

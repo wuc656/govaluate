@@ -1,9 +1,9 @@
 package govaluate
 
 import (
-	"slices"
 	"errors"
 	"fmt"
+	"slices"
 	"time"
 )
 

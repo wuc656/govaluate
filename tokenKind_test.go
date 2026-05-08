@@ -36,10 +36,10 @@ func TestTokenKindStrings(test *testing.T) {
 		kindString = kind.String()
 
 		if slices.Contains(kindStrings, kindString) {
-				test.Logf("Token kind test found duplicate string for token kind %v ('%v')\n", kind, kindString)
-				test.Fail()
-				return
-			}
+			test.Logf("Token kind test found duplicate string for token kind %v ('%v')\n", kind, kindString)
+			test.Fail()
+			return
+		}
 
 		kindStrings = append(kindStrings, kindString)
 	}
