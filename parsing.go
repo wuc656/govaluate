@@ -333,7 +333,7 @@ func readUntilFalse(stream *lexerStream, includeWhitespace bool, breakWhitespace
 		if allowEscaping && character == '\\' {
 			reuseString = false
 			character = stream.readCharacter()
-			tokenBuffer.WriteString(string(character))
+			tokenBuffer.WriteRune(character)
 			continue
 		}
 
@@ -350,7 +350,7 @@ func readUntilFalse(stream *lexerStream, includeWhitespace bool, breakWhitespace
 		}
 
 		if condition(character) {
-			tokenBuffer.WriteString(string(character))
+			tokenBuffer.WriteRune(character)
 		} else {
 			conditioned = true
 			stream.rewind(1)
@@ -500,6 +500,23 @@ type timeFormat struct {
 	maxLength int
 }
 
+var timeFormats = [...]timeFormat{
+	{time.ANSIC, len(time.ANSIC) - 1, len(time.ANSIC)},
+	{time.UnixDate, len(time.UnixDate) - 1, len(time.ANSIC)},
+	{time.RubyDate, len(time.RubyDate), len(time.RubyDate)},
+	{time.Kitchen, len(time.Kitchen), len(time.Kitchen) + 1},
+	{time.RFC3339, len(time.RFC3339), len(time.RFC3339)},
+	{time.RFC3339Nano, len(time.RFC3339Nano), len(time.RFC3339Nano)},
+	{"2006-01-02", 10, 10},                         // RFC 3339
+	{"2006-01-02 15:04", 16, 16},                   // RFC 3339 with minutes
+	{"2006-01-02 15:04:05", 19, 19},                // RFC 3339 with seconds
+	{"2006-01-02 15:04:05-07:00", 25, 25},          // RFC 3339 with seconds and timezone
+	{"2006-01-02T15Z0700", 18, 18},                 // ISO8601 with hour
+	{"2006-01-02T15:04Z0700", 21, 21},              // ISO8601 with minutes
+	{"2006-01-02T15:04:05Z0700", 24, 24},           // ISO8601 with seconds
+	{"2006-01-02T15:04:05.999999999Z0700", 34, 34}, // ISO8601 with nanoseconds
+}
+
 /*
 Attempts to parse the [candidate] as a Time.
 Tries a series of standardized date formats, returns the Time if one applies,
@@ -513,23 +530,6 @@ func tryParseTime(candidate string) (time.Time, bool) {
 	if !strings.Contains(candidate, ":") && !strings.Contains(candidate, "-") {
 		// The blow formats either have a : or a - in them. If the string contains neither it cannot be a time string
 		return time.Now(), false
-	}
-
-	timeFormats := [...]timeFormat{
-		{time.ANSIC, len(time.ANSIC) - 1, len(time.ANSIC)},
-		{time.UnixDate, len(time.UnixDate) - 1, len(time.ANSIC)},
-		{time.RubyDate, len(time.RubyDate), len(time.RubyDate)},
-		{time.Kitchen, len(time.Kitchen), len(time.Kitchen) + 1},
-		{time.RFC3339, len(time.RFC3339), len(time.RFC3339)},
-		{time.RFC3339Nano, len(time.RFC3339Nano), len(time.RFC3339Nano)},
-		{"2006-01-02", 10, 10},                         // RFC 3339
-		{"2006-01-02 15:04", 16, 16},                   // RFC 3339 with minutes
-		{"2006-01-02 15:04:05", 19, 19},                // RFC 3339 with seconds
-		{"2006-01-02 15:04:05-07:00", 25, 25},          // RFC 3339 with seconds and timezone
-		{"2006-01-02T15Z0700", 18, 18},                 // ISO8601 with hour
-		{"2006-01-02T15:04Z0700", 21, 21},              // ISO8601 with minutes
-		{"2006-01-02T15:04:05Z0700", 24, 24},           // ISO8601 with seconds
-		{"2006-01-02T15:04:05.999999999Z0700", 34, 34}, // ISO8601 with nanoseconds
 	}
 
 	for _, format := range timeFormats {

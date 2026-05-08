@@ -65,5 +65,9 @@ func (stream lexerStream) canRead() bool {
 
 func (stream *lexerStream) close() {
 	stream.source = stream.source[:0]
+	stream.sourceString = ""
+	stream.strPosition = 0
+	stream.position = 0
+	stream.length = 0
 	lexerStreamPool.Put(stream)
 }

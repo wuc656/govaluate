@@ -136,10 +136,33 @@ func ltStage(left any, right any, parameters Parameters) (any, error) {
 	return boolIface(left.(float64) < right.(float64)), nil
 }
 func equalStage(left any, right any, parameters Parameters) (any, error) {
+	if result, ok := equalCommonValues(left, right); ok {
+		return boolIface(result), nil
+	}
 	return boolIface(reflect.DeepEqual(left, right)), nil
 }
 func notEqualStage(left any, right any, parameters Parameters) (any, error) {
+	if result, ok := equalCommonValues(left, right); ok {
+		return boolIface(!result), nil
+	}
 	return boolIface(!reflect.DeepEqual(left, right)), nil
+}
+
+func equalCommonValues(left any, right any) (bool, bool) {
+	switch left := left.(type) {
+	case nil:
+		return right == nil, true
+	case bool:
+		right, ok := right.(bool)
+		return left == right, ok
+	case float64:
+		right, ok := right.(float64)
+		return left == right, ok
+	case string:
+		right, ok := right.(string)
+		return left == right, ok
+	}
+	return false, false
 }
 func andStage(left any, right any, parameters Parameters) (any, error) {
 	return boolIface(left.(bool) && right.(bool)), nil
@@ -467,16 +490,11 @@ func inStage(left any, right any, parameters Parameters) (any, error) {
 //
 
 func isString(value any) bool {
-
-	switch value.(type) {
-	case string:
-		return true
-	}
-	return false
+	_, ok := value.(string)
+	return ok
 }
 
 func isRegexOrString(value any) bool {
-
 	switch value.(type) {
 	case string:
 		return true
@@ -487,19 +505,13 @@ func isRegexOrString(value any) bool {
 }
 
 func isBool(value any) bool {
-	switch value.(type) {
-	case bool:
-		return true
-	}
-	return false
+	_, ok := value.(bool)
+	return ok
 }
 
 func isFloat64(value any) bool {
-	switch value.(type) {
-	case float64:
-		return true
-	}
-	return false
+	_, ok := value.(float64)
+	return ok
 }
 
 /*
@@ -533,11 +545,8 @@ func comparatorTypeCheck(left any, right any) bool {
 }
 
 func isArray(value any) bool {
-	switch value.(type) {
-	case []any:
-		return true
-	}
-	return false
+	_, ok := value.([]any)
+	return ok
 }
 
 /*

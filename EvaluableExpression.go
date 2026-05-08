@@ -161,10 +161,9 @@ func (e EvaluableExpression) Eval(parameters Parameters) (any, error) {
 		return nil, nil
 	}
 
-	free := false
+	var tmp *sanitizedParameters
 	if parameters != nil {
-		free = true
-		tmp := sanitizedParamsPool.Get().(*sanitizedParameters)
+		tmp = sanitizedParamsPool.Get().(*sanitizedParameters)
 		tmp.orig = parameters
 		parameters = tmp
 	} else {
@@ -172,8 +171,9 @@ func (e EvaluableExpression) Eval(parameters Parameters) (any, error) {
 	}
 
 	ret, err := e.evaluateStage(e.evaluationStages, parameters)
-	if free {
-		sanitizedParamsPool.Put(parameters)
+	if tmp != nil {
+		tmp.orig = nil
+		sanitizedParamsPool.Put(tmp)
 	}
 	return ret, err
 }
@@ -294,5 +294,5 @@ func (e EvaluableExpression) Vars() []string {
 Removes the tokens from the EvaluableExpression. This will cause the Tokens() and Vars() functions to no longer operate, but will save memory.
 */
 func (e *EvaluableExpression) CleanupTokens() {
-	e.tokens = e.tokens[:0]
+	e.tokens = nil
 }

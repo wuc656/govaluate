@@ -39,5 +39,8 @@ func (t tokenStream) hasNext() bool {
 }
 
 func (t *tokenStream) close() {
+	t.tokens = nil
+	t.index = 0
+	t.tokenLength = 0
 	tokenStreamPool.Put(t)
 }
