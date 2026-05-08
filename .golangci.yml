@@ -26,12 +26,7 @@ linters:
     - prealloc
 
 linters-settings:
-  staticcheck:
-    # 'go' version is inferred from go.mod, no longer allowed here
-
-  gosec:
-    exclude:
-      - G404  # Disable weak random number generator check for test files
+  # gosec 的排除规则已通过 issues.exclude-rules 处理，这里不再需要
 
 issues:
   exclude-rules:
