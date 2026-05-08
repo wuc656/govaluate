@@ -3,7 +3,6 @@
 
 run:
   timeout: 10m
-  go: "1.21"
 
 linters:
   enable:
@@ -16,25 +15,22 @@ linters:
     - misspell
 
   disable:
-    - lll  # Line length limit, can be re-enabled later after code formatting
-    - wsl 
-    - gomnd  # Magic number checks, too strict for tests and constants
-    - gocyclo  # Cyclomatic complexity, too strict for existing code
-    - goconst  # String constants, too strict for test strings
-    - dupl  # Duplicate code detection, too strict for existing code
-    - unparam  # Unused parameters, too strict for interface implementations
-    - revive  # Too many style warnings for existing code
-    - prealloc  # Pre-allocation suggestions, too strict
-    - structcheck  
-    - varcheck  
-    - deadcode  
+    - lll
+    - wsl
+    - gomnd
+    - gocyclo
+    - goconst
+    - dupl
+    - unparam
+    - revive
+    - prealloc
 
 linters-settings:
   staticcheck:
-    go: "1.21"
-  
+    # 'go' version is inferred from go.mod, no longer allowed here
+
   gosec:
-    excludes:
+    exclude:
       - G404  # Disable weak random number generator check for test files
 
 issues:
@@ -59,4 +55,4 @@ issues:
         - gosec
 
   max-issues-per-linter: 0
-  max-same-issues: 0 
+  max-same-issues: 0
