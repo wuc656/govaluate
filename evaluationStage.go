@@ -68,15 +68,7 @@ func (e *evaluationStage) setToNonStage(other evaluationStage) {
 func (e *evaluationStage) isShortCircuitable() bool {
 
 	switch e.symbol {
-	case AND:
-		fallthrough
-	case OR:
-		fallthrough
-	case TERNARY_TRUE:
-		fallthrough
-	case TERNARY_FALSE:
-		fallthrough
-	case COALESCE:
+	case AND, OR, TERNARY_TRUE, TERNARY_FALSE, COALESCE:
 		return true
 	}
 
@@ -496,9 +488,7 @@ func isString(value any) bool {
 
 func isRegexOrString(value any) bool {
 	switch value.(type) {
-	case string:
-		return true
-	case *regexp.Regexp:
+	case string, *regexp.Regexp:
 		return true
 	}
 	return false

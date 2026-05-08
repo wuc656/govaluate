@@ -21,8 +21,10 @@ var lexerStreamPool = sync.Pool{
 
 func newLexerStream(source string) *lexerStream {
 	ret := lexerStreamPool.Get().(*lexerStream)
-	if ret.source == nil {
+	if cap(ret.source) < len(source) {
 		ret.source = make([]rune, 0, len(source))
+	} else {
+		ret.source = ret.source[:0]
 	}
 	for _, character := range source {
 		ret.source = append(ret.source, character)

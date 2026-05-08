@@ -30,6 +30,7 @@ func parseTokens(expression string, functions map[string]ExpressionFunction) ([]
 	var found bool
 
 	stream = newLexerStream(expression)
+	defer stream.close()
 	state = validLexerStates[0]
 
 	for stream.canRead() {
@@ -52,7 +53,6 @@ func parseTokens(expression string, functions map[string]ExpressionFunction) ([]
 		// append this valid token
 		ret = append(ret, token)
 	}
-	stream.close()
 	samplesMu.Lock()
 	if len(samples) == cap(samples) {
 		copy(samples, samples[1:])
