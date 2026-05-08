@@ -25,9 +25,6 @@ linters:
     - revive
     - prealloc
 
-linters-settings:
-  # gosec 的排除规则已通过 issues.exclude-rules 处理，这里不再需要
-
 issues:
   exclude-rules:
     - path: _test\.go
