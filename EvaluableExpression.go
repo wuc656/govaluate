@@ -44,8 +44,7 @@ Returns an error if the given expression has invalid syntax.
 */
 func NewEvaluableExpression(expression string) (*EvaluableExpression, error) {
 
-	functions := make(map[string]ExpressionFunction)
-	return NewEvaluableExpressionWithFunctions(expression, functions)
+	return NewEvaluableExpressionWithFunctions(expression, nil)
 }
 
 /*
@@ -98,11 +97,6 @@ func NewEvaluableExpressionWithFunctions(expression string, functions map[string
 	ret.inputExpression = expression
 
 	ret.tokens, err = parseTokens(expression, functions)
-	if err != nil {
-		return nil, err
-	}
-
-	err = checkBalance(ret.tokens)
 	if err != nil {
 		return nil, err
 	}

@@ -16,7 +16,8 @@ var (
 func getParameterStage(name string) (*evaluationStage, error) {
 	stage, ok := getParamFromMap(name)
 	if ok {
-		return stage, nil
+		cp := *stage
+		return &cp, nil
 	}
 
 	operator := makeParameterStage(name)
@@ -25,7 +26,8 @@ func getParameterStage(name string) (*evaluationStage, error) {
 	}
 	storeVal := weak.Make(ret)
 	paramMap.Store(name, storeVal)
-	return ret, nil
+	cp := *ret
+	return &cp, nil
 }
 
 func getParamFromMap(name string) (*evaluationStage, bool) {
@@ -46,7 +48,8 @@ func getParamFromMap(name string) (*evaluationStage, bool) {
 func getConstantStage(value any) (*evaluationStage, error) {
 	stage, ok := getConstantFromMap(value)
 	if ok {
-		return stage, nil
+		cp := *stage
+		return &cp, nil
 	}
 
 	operator := makeLiteralStage(value)
@@ -56,7 +59,8 @@ func getConstantStage(value any) (*evaluationStage, error) {
 	}
 	storeVal := weak.Make(ret)
 	constMap.Store(value, storeVal)
-	return ret, nil
+	cp := *ret
+	return &cp, nil
 }
 
 func getConstantFromMap(value any) (*evaluationStage, bool) {

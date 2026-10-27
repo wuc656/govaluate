@@ -323,7 +323,7 @@ func makeAccessorStage(pair []string) evaluationOperator {
 		// therefore every call to an accessor sets up a defer that tries to recover from panics, converting them to errors.
 		defer func() {
 			if r := recover(); r != nil {
-				errorMsg := fmt.Sprintf("Failed to access '%s': %v", reconstructed, r.(string))
+				errorMsg := fmt.Sprintf("Failed to access '%s': %v", reconstructed, r)
 				err = errors.New(errorMsg)
 				ret = nil
 			}

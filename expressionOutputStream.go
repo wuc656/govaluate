@@ -1,7 +1,7 @@
 package govaluate
 
 import (
-	"bytes"
+	"strings"
 )
 
 /*
@@ -27,20 +27,5 @@ func (e *expressionOutputStream) rollback() string {
 }
 
 func (e *expressionOutputStream) createString(delimiter string) string {
-
-	var retBuffer bytes.Buffer
-	var transaction string
-
-	penultimate := len(e.transactions) - 1
-
-	for i := range penultimate {
-
-		transaction = e.transactions[i]
-
-		retBuffer.WriteString(transaction)
-		retBuffer.WriteString(delimiter)
-	}
-	retBuffer.WriteString(e.transactions[penultimate])
-
-	return retBuffer.String()
+	return strings.Join(e.transactions, delimiter)
 }

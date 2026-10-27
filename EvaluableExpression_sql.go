@@ -26,6 +26,7 @@ func (e EvaluableExpression) ToSQLQuery() (string, error) {
 	var err error
 
 	stream = newTokenStream(e.tokens)
+	defer stream.close()
 	transactions = new(expressionOutputStream)
 
 	for stream.hasNext() {

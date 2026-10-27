@@ -529,7 +529,7 @@ func tryParseTime(candidate string) (time.Time, bool) {
 
 	if !strings.Contains(candidate, ":") && !strings.Contains(candidate, "-") {
 		// The blow formats either have a : or a - in them. If the string contains neither it cannot be a time string
-		return time.Now(), false
+		return time.Time{}, false
 	}
 
 	for _, format := range timeFormats {
@@ -543,7 +543,7 @@ func tryParseTime(candidate string) (time.Time, bool) {
 		}
 	}
 
-	return time.Now(), false
+	return time.Time{}, false
 }
 
 func tryParseExactTime(candidate string, format string) (time.Time, bool) {
@@ -553,7 +553,7 @@ func tryParseExactTime(candidate string, format string) (time.Time, bool) {
 
 	ret, err = time.ParseInLocation(format, candidate, time.Local)
 	if err != nil {
-		return time.Now(), false
+		return time.Time{}, false
 	}
 
 	return ret, true

@@ -182,12 +182,12 @@ The three stages of evaluation can be thought of as parsing strings to tokens, t
 func planStages(tokens []ExpressionToken) (*evaluationStage, error) {
 
 	stream := newTokenStream(tokens)
+	defer stream.close()
 
 	stage, err := planTokens(stream)
 	if err != nil {
 		return nil, err
 	}
-	stream.close()
 
 	// while we're now fully-planned, we now need to re-order same-precedence operators.
 	// this could probably be avoided with a different planning method
