@@ -58,7 +58,9 @@ const (
 	prefixPrecedence
 	exponentialPrecedence
 	additivePrecedence
-	bitwisePrecedence
+	bitwiseAndPrecedence
+	bitwiseXorPrecedence
+	bitwiseOrPrecedence
 	bitwiseShiftPrecedence
 	multiplicativePrecedence
 	comparatorPrecedence
@@ -98,11 +100,11 @@ func findOperatorPrecedenceForSymbol(symbol OperatorSymbol) operatorPrecedence {
 	case OR:
 		return logicalOrPrecedence
 	case BITWISE_AND:
-		fallthrough
-	case BITWISE_OR:
-		fallthrough
+		return bitwiseAndPrecedence
 	case BITWISE_XOR:
-		return bitwisePrecedence
+		return bitwiseXorPrecedence
+	case BITWISE_OR:
+		return bitwiseOrPrecedence
 	case BITWISE_LSHIFT:
 		fallthrough
 	case BITWISE_RSHIFT:
@@ -164,9 +166,15 @@ var logicalSymbols = map[string]OperatorSymbol{
 	"||": OR,
 }
 
-var bitwiseSymbols = map[string]OperatorSymbol{
-	"^": BITWISE_XOR,
+var bitwiseAndSymbols = map[string]OperatorSymbol{
 	"&": BITWISE_AND,
+}
+
+var bitwiseXorSymbols = map[string]OperatorSymbol{
+	"^": BITWISE_XOR,
+}
+
+var bitwiseOrSymbols = map[string]OperatorSymbol{
 	"|": BITWISE_OR,
 }
 
