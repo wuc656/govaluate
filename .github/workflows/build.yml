@@ -68,22 +68,3 @@ jobs:
             git diff
             exit 1
           fi
-
-  semantic-release:
-    name: Release
-    needs: [test, lint, format]
-    runs-on: ubuntu-latest
-    if: github.repository == 'wuc656/govaluate' && github.event_name == 'push'
-    permissions:
-      contents: write
-      issues: write
-      pull-requests: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0        # 修正：0 = 完整 history
-
-      - name: Run semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release@22.0.8
